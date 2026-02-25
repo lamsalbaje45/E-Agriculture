@@ -1,35 +1,29 @@
+import React from "react";
+
 function ProductCard({ name, price, location, image }) {
   return (
-    <div style={{
-      width: "250px",
-      border: "1px solid #ddd",
-      borderRadius: "10px",
-      overflow: "hidden",
-      boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-      backgroundColor: "white"
-    }}>
-      
+    <div className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition duration-300">
+
       <img
         src={image}
         alt={name}
-        style={{ width: "100%", height: "180px", objectFit: "cover" }}
+        className="w-full h-48 object-cover"
       />
 
-      <div style={{ padding: "15px" }}>
-        <h3>{name}</h3>
-        <p><b>Rs. {price} /kg</b></p>
-        <p style={{ color: "gray" }}>{location}</p>
-        <button style={{
-          backgroundColor: "#2e7d32",
-          color: "white",
-          padding: "8px 12px",
-          border: "none",
-          borderRadius: "6px",
-          cursor: "pointer"
-        }}>
+      <div className="p-5">
+        <h3 className="text-xl font-semibold mb-2">{name}</h3>
+
+        <p className="text-green-700 font-bold mb-1">
+          Rs. {price} /kg
+        </p>
+
+        <p className="text-gray-500 mb-4">{location}</p>
+
+        <button className="w-full bg-green-700 text-white py-2 rounded-lg hover:bg-green-800 transition font-semibold">
           View Details
         </button>
       </div>
+
     </div>
   );
 }

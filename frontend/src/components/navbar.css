@@ -1,0 +1,55 @@
+.navbar{
+  background:#1b5e20;
+  height:70px;
+  display:flex;
+  align-items:center;
+  position:sticky;
+  top:0;
+  z-index:1000;
+}
+
+.nav-container{
+  width:90%;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.logo a{
+  color:white;
+  font-size:26px;
+  font-weight:bold;
+  text-decoration:none;
+}
+
+.nav-links{
+  list-style:none;
+  display:flex;
+  gap:30px;
+  align-items:center;
+}
+
+.nav-links li a{
+  text-decoration:none;
+  color:white;
+  font-weight:500;
+  transition:0.2s;
+}
+
+.nav-links li a:hover{
+  color:#c8e6c9;
+}
+
+.active a{
+  border-bottom:2px solid #c8e6c9;
+  padding-bottom:4px;
+}
+
+.register-btn{
+  background:white;
+  color:#1b5e20 !important;
+  padding:8px 18px;
+  border-radius:8px;
+  font-weight:600;
+}

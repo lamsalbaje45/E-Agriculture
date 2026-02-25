@@ -1,27 +1,35 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import "./navbar.css";
+
 function Navbar() {
+  const location = useLocation();
+
   return (
-    <nav style={{
-      display: "flex",
-      justifyContent: "space-between",
-      padding: "15px 30px",
-      backgroundColor: "#2e7d32",
-      color: "white"
-    }}>
-      <h2>KrishiConnect</h2>
+    <nav className="navbar">
+      <div className="nav-container">
 
-      <div style={{display:"flex", gap:"20px"}}>
-        <a href="#">Home</a>
-        <a href="#">Products</a>
-        <a href="#">Login</a>
-        <a href="#">Register</a>
+        <div className="logo">
+          <Link to="/">KrishiConnect</Link>
+        </div>
 
-        <div style={{display:"flex", gap:"20px"}}>
-  <Link to="/">Home</Link>
-  <Link to="/">Products</Link>
-  <Link to="/login">Login</Link>
-  <Link to="/register">Register</Link>
-</div>
+        <ul className="nav-links">
+          <li className={location.pathname === "/" ? "active" : ""}>
+            <Link to="/">Home</Link>
+          </li>
+
+          <li className={location.pathname === "/products" ? "active" : ""}>
+            <Link to="/products">Products</Link>
+          </li>
+
+          <li className={location.pathname === "/login" ? "active" : ""}>
+            <Link to="/login">Login</Link>
+          </li>
+
+          <li>
+            <Link to="/register" className="register-btn">Register</Link>
+          </li>
+        </ul>
+
       </div>
     </nav>
   );
