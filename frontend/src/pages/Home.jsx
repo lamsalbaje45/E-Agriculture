@@ -1,4 +1,7 @@
 import { Link } from "react-router-dom";
+import ProductCard from "../components/ProductCard";
+
+import { mockProducts as products } from "../data/products";
 
 const categories = [
   { name: "Vegetable Seeds", img: "https://images.unsplash.com/photo-1592928303262-02f6a4b43b6f" },
@@ -9,56 +12,73 @@ const categories = [
   { name: "Tools", img: "https://images.unsplash.com/photo-1598514982846-9a9f8c74b2f6" },
 ];
 
-const products = [
-  { name: "Fresh Tomatoes", price: 80, img: "https://images.unsplash.com/photo-1546094096-0df4bcaaa337" },
-  { name: "Organic Potatoes", price: 60, img: "https://images.unsplash.com/photo-1518977676601-b53f82aba655" },
-  { name: "Spinach", price: 50, img: "https://images.unsplash.com/photo-1576045057995-568f588f82fb" },
-  { name: "Cauliflower", price: 70, img: "https://images.unsplash.com/photo-1615486362658-62c5fbe48b7e" },
-  { name: "Cabbage", price: 55, img: "https://images.unsplash.com/photo-1603048297172-c92544798d5a" },
-  { name: "Carrot", price: 65, img: "https://images.unsplash.com/photo-1582515073490-39981397c445" },
-];
-
 function Home() {
   return (
-    <div>
-
+    <div className="bg-gradient-to-b from-luxury-cream via-[#F0F7F2] to-[#FAFDF8]">
       {/* HERO SECTION */}
-      <section className="hero">
-        <div className="hero-content">
-          <h1>Buy Fresh Vegetables Directly From Farmers</h1>
-          <p>KrishiConnect connects local farmers with consumers across Nepal.</p>
-          <Link to="/products" className="hero-btn">Shop Now</Link>
+      <section className="relative h-screen bg-cover bg-center flex items-center justify-center overflow-hidden" 
+               style={{backgroundImage: 'url("https://images.unsplash.com/photo-1500595046743-cd271d694d30")'}}>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-black/50"></div>
+        <div className="relative text-center text-white max-w-3xl px-6 z-10">
+          <h1 className="text-6xl md:text-7xl font-serif font-bold mb-6 leading-tight">Farm Fresh Perfection</h1>
+          <p className="text-xl md:text-2xl mb-10 font-light opacity-95">Direct from Nepal's finest farmers to your table. Premium quality, fair prices, sustainable farming.</p>
+          <Link 
+            to="/products" 
+            className="inline-block bg-gradient-to-r from-luxury-gold to-[#D4AF37] text-[#1B3D2F] px-10 py-4 rounded-full font-serif font-bold text-lg hover:shadow-luxury-lg transition-all duration-300 shadow-luxury"
+          >
+            Explore Collection
+          </Link>
         </div>
       </section>
 
       {/* CATEGORY SECTION */}
-      <section className="category-section">
-        <h2>Shop by Category</h2>
-        <div className="category-grid">
+      <section className="py-24 px-6 max-w-7xl mx-auto">
+        <h2 className="text-5xl font-serif font-bold text-center text-[#1B3D2F] mb-4">Shop by Category</h2>
+        <p className="text-center text-gray-600 mb-16 text-lg">Curated selections across all agriculture categories</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6">
           {categories.map((cat, index) => (
-            <div key={index} className="category-card">
-              <img src={cat.img} alt={cat.name} />
-              <p>{cat.name}</p>
+            <div 
+              key={index} 
+              className="group bg-white rounded-xl shadow-luxury hover:shadow-luxury-lg transition-all duration-300 hover:-translate-y-2 overflow-hidden cursor-pointer border border-luxury-gold/10"
+            >
+              <div className="relative overflow-hidden h-40">
+                <img 
+                  src={cat.img} 
+                  alt={cat.name}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              </div>
+              <p className="p-4 text-center font-semibold text-[#1B3D2F]">{cat.name}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* FEATURED PRODUCTS */}
-      <section className="product-section">
-        <h2>Featured Products</h2>
-        <div className="product-grid">
-          {products.map((p, index) => (
-            <div key={index} className="product-card">
-              <img src={p.img} alt={p.name} />
-              <h3>{p.name}</h3>
-              <p className="price">Rs. {p.price}/kg</p>
-              <button>Add to Cart</button>
-            </div>
+      <section className="py-24 px-6 max-w-7xl mx-auto">
+        <h2 className="text-5xl font-serif font-bold text-center text-[#1B3D2F] mb-4">Featured Products</h2>
+        <p className="text-center text-gray-600 mb-16 text-lg">Hand-picked finest selections from verified farmers</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {products.slice(0, 6).map((p) => (
+            <ProductCard key={p.id} product={p} />
           ))}
         </div>
       </section>
 
+      {/* LUXURY CTA SECTION */}
+      <section className="py-20 px-6 bg-gradient-to-r from-[#1B3D2F] to-[#2F6F4F] text-white rounded-3xl mx-6 mb-12 shadow-luxury-lg">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl font-serif font-bold mb-4">Join the Farm-to-Table Revolution</h2>
+          <p className="text-lg opacity-90 mb-8">Support local farmers. Get premium produce. Build a sustainable future.</p>
+          <Link 
+            to="/products"
+            className="inline-block bg-luxury-gold text-[#1B3D2F] px-10 py-4 rounded-full font-serif font-bold hover:shadow-luxury transition-all duration-300"
+          >
+            Discover More
+          </Link>
+        </div>
+      </section>
     </div>
   );
 }
