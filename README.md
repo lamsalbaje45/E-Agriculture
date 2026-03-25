@@ -121,15 +121,4 @@ npm run dev
 - `POST /api/payments/initiate`
 - `POST /api/payments/esewa/verify`
 
-## Deployment Notes
 
-- Deploy the React app on Vercel and set `VITE_API_URL` and `VITE_SOCKET_URL`.
-- Deploy the Express API on Render and set the same backend environment variables you use in `backend/.env`.
-- Use a managed MySQL instance and update Render environment variables accordingly.
-- Replace test eSewa credentials with your live merchant values before production.
-
-## Important Notes
-
-- eSewa integration uses the v2 redirect flow with backend signature generation and payment status verification.
-- File uploads are implemented for user profile photos; products currently accept image URLs.
-- The project is a strong starter template and should be extended with validation, tests, and production hardening before launch.
