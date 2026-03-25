@@ -36,7 +36,7 @@ SYP/
 
 ### 1. Create the database
 
-Run [`database.sql`](/d:/SYP/database.sql) in MySQL.
+Run [`database.sql`](/d:/E-Agriculture/database.sql) in MySQL.
 
 After importing the schema, create your first admin, farmer, and buyer accounts through the registration UI or seed them yourself with real bcrypt hashes.
 
