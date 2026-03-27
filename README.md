@@ -124,3 +124,33 @@ npm run dev
 - `GET /api/analytics`
 - `POST /api/payments/initiate`
 - `POST /api/payments/esewa/verify`
+
+## Team Contribution
+
+1. Susant Lamsal - Project Lead and Backend Integration
+
+- Planned system architecture and coordinated task execution.
+- Integrated authentication, API routing, and core backend modules.
+- Implemented Socket.IO chat and live notification functionality.
+- Led backend and integration testing for critical workflows.
+- Reviewed code quality and managed final backend integration.
+
+2. Yuras Pokhrel - Frontend Development (Core UI)
+
+- Built core React pages, reusable components, and routing flow.
+- Implemented responsive layouts and shared UI structure with Tailwind CSS.
+- Integrated frontend with backend APIs for user, product, and order flows.
+- Performed frontend and usability testing across key user journeys.
+
+3. Adarsha Ghimire - Database and API Development
+
+- Designed and maintained MySQL schema and query structure.
+- Implemented product, order, analytics, and notification endpoints.
+- Optimized API request/response handling and data consistency.
+
+4. Ronak Adhikari - Frontend Development (Feature UI) and Deployment
+
+- Developed feature-specific frontend screens and interaction flows.
+- Supported frontend refinements, testing, and API integration for usability.
+- Integrated payment flow and cloud image upload support.
+- Supported and testing.
