@@ -2,7 +2,6 @@ import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import http from "http";
-import path from "path";
 import { Server } from "socket.io";
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
@@ -27,7 +26,6 @@ const io = new Server(server, {
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(express.json());
 app.use(morgan("dev"));
-app.use("/uploads", express.static(path.resolve("d:/SYP/backend/uploads")));
 
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", message: "Krishi Connect API is running." });

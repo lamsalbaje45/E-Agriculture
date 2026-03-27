@@ -1,4 +1,5 @@
 import { query } from "../config/db.js";
+import { destroyCloudinaryImageByUrl, uploadImageBuffer } from "../utils/cloudinaryUpload.js";
 
 export async function listProducts(req, res, next) {
   try {
@@ -61,7 +62,17 @@ export async function getProductById(req, res, next) {
 export async function createProduct(req, res, next) {
   try {
     const { name, description, productType, price, quantity, unit, region, imageUrl } = req.body;
-    const nextImageUrl = req.file ? `/uploads/products/${req.file.filename}` : imageUrl || null;
+    let nextImageUrl = imageUrl || null;
+
+    if (req.file) {
+      const uploadedImage = await uploadImageBuffer({
+        buffer: req.file.buffer,
+        folder: "krishi-connect/products",
+        publicIdPrefix: `product-${req.user.id}`,
+      });
+
+      nextImageUrl = uploadedImage.secureUrl;
+    }
 
     const result = await query(
       `INSERT INTO products (farmer_id, name, description, product_type, price, quantity, unit, region, image_url)
@@ -90,11 +101,19 @@ export async function updateProduct(req, res, next) {
     }
 
     const { name, description, productType, price, quantity, unit, region, imageUrl } = req.body;
-    const nextImageUrl = req.file
-      ? `/uploads/products/${req.file.filename}`
-      : imageUrl !== undefined
-        ? imageUrl || null
-        : product.image_url;
+    let nextImageUrl = imageUrl !== undefined
+      ? imageUrl || null
+      : product.image_url;
+
+    if (req.file) {
+      const uploadedImage = await uploadImageBuffer({
+        buffer: req.file.buffer,
+        folder: "krishi-connect/products",
+        publicIdPrefix: `product-${req.user.id}`,
+      });
+
+      nextImageUrl = uploadedImage.secureUrl;
+    }
 
     await query(
       `UPDATE products
@@ -102,6 +121,14 @@ export async function updateProduct(req, res, next) {
        WHERE id = ?`,
       [name, description || null, productType, price, quantity, unit, region, nextImageUrl, req.params.id]
     );
+
+    if (product.image_url && product.image_url !== nextImageUrl) {
+      try {
+        await destroyCloudinaryImageByUrl(product.image_url);
+      } catch (cleanupError) {
+        console.warn("Failed to remove previous Cloudinary product image:", cleanupError.message);
+      }
+    }
 
     const rows = await query("SELECT * FROM products WHERE id = ?", [req.params.id]);
     res.json(rows[0]);
@@ -123,7 +150,17 @@ export async function deleteProduct(req, res, next) {
       return res.status(403).json({ message: "You can only delete your own products." });
     }
 
+    const previousImageUrl = product.image_url;
     await query("DELETE FROM products WHERE id = ?", [req.params.id]);
+
+    if (previousImageUrl) {
+      try {
+        await destroyCloudinaryImageByUrl(previousImageUrl);
+      } catch (cleanupError) {
+        console.warn("Failed to remove deleted product Cloudinary image:", cleanupError.message);
+      }
+    }
+
     res.json({ message: "Product deleted successfully." });
   } catch (error) {
     next(error);

@@ -1,4 +1,5 @@
 import { query } from "../config/db.js";
+import { destroyCloudinaryImageByUrl, uploadImageBuffer } from "../utils/cloudinaryUpload.js";
 
 export async function listUsers(req, res, next) {
   try {
@@ -37,13 +38,28 @@ export async function updateProfile(req, res, next) {
     }
 
     if (req.file) {
-      nextPhotoUrl = `/uploads/profiles/${req.file.filename}`;
+      const uploadedImage = await uploadImageBuffer({
+        buffer: req.file.buffer,
+        folder: "krishi-connect/profiles",
+        publicIdPrefix: `profile-${req.user.id}`,
+      });
+
+      nextPhotoUrl = uploadedImage.secureUrl;
     }
 
     await query(
       "UPDATE users SET full_name = ?, phone = ?, region = ?, address = ?, latitude = ?, longitude = ?, photo_url = ? WHERE id = ?",
       [fullName, phone || null, region || null, address || null, parsedLatitude, parsedLongitude, nextPhotoUrl, req.user.id]
     );
+
+    const previousPhotoUrl = currentUser?.photo_url || null;
+    if (previousPhotoUrl && previousPhotoUrl !== nextPhotoUrl) {
+      try {
+        await destroyCloudinaryImageByUrl(previousPhotoUrl);
+      } catch (cleanupError) {
+        console.warn("Failed to remove previous Cloudinary profile image:", cleanupError.message);
+      }
+    }
 
     const rows = await query(
       "SELECT id, full_name, email, role, phone, region, address, latitude, longitude, photo_url, created_at FROM users WHERE id = ?",

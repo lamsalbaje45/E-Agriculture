@@ -60,6 +60,10 @@ ESEWA_FORM_URL=https://rc-epay.esewa.com.np/api/epay/main/v2/form
 ESEWA_STATUS_CHECK_URL=https://rc.esewa.com.np/api/epay/transaction/status/
 ESEWA_PRODUCT_CODE=your_esewa_product_code
 ESEWA_SECRET_KEY=your_esewa_secret_key
+# Cloudinary Image Storage
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 ```
 
 ### 3. Configure the frontend
@@ -120,5 +124,3 @@ npm run dev
 - `GET /api/analytics`
 - `POST /api/payments/initiate`
 - `POST /api/payments/esewa/verify`
-
-

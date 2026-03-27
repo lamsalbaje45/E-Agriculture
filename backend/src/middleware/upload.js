@@ -1,23 +1,7 @@
 import multer from "multer";
-import fs from "fs";
-import path from "path";
 
-const uploadsRootDir = path.resolve("d:/SYP/backend/uploads");
-
-function createImageUploader({ subDir, filePrefix }) {
-  const uploadDir = path.join(uploadsRootDir, subDir);
-  fs.mkdirSync(uploadDir, { recursive: true });
-
-  const storage = multer.diskStorage({
-    destination(req, file, cb) {
-      cb(null, uploadDir);
-    },
-    filename(req, file, cb) {
-      const ext = path.extname(file.originalname || "").toLowerCase();
-      const safeExt = ext || ".jpg";
-      cb(null, `${filePrefix}-${req.user?.id || "user"}-${Date.now()}${safeExt}`);
-    },
-  });
+function createImageUploader() {
+  const storage = multer.memoryStorage();
 
   return multer({
     storage,
@@ -37,12 +21,6 @@ function fileFilter(req, file, cb) {
   cb(new Error("Only image uploads are allowed."));
 }
 
-export const uploadProfilePhoto = createImageUploader({
-  subDir: "profiles",
-  filePrefix: "profile",
-});
+export const uploadProfilePhoto = createImageUploader();
 
-export const uploadProductPhoto = createImageUploader({
-  subDir: "products",
-  filePrefix: "product",
-});
+export const uploadProductPhoto = createImageUploader();
