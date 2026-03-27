@@ -52,6 +52,32 @@ CREATE TABLE IF NOT EXISTS orders (
     FOREIGN KEY (buyer_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS payments (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    order_id INT NOT NULL,
+    buyer_id INT NOT NULL,
+    provider ENUM('esewa', 'cod') NOT NULL DEFAULT 'esewa',
+    transaction_uuid VARCHAR(100),
+    amount DECIMAL(10, 2) NOT NULL,
+    status ENUM(
+        'pending',
+        'paid',
+        'failed',
+        'refunded'
+    ) NOT NULL DEFAULT 'pending',
+    gateway_reference VARCHAR(150),
+    gateway_response JSON,
+    paid_at TIMESTAMP NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (order_id) REFERENCES orders (id) ON DELETE CASCADE,
+    FOREIGN KEY (buyer_id) REFERENCES users (id) ON DELETE CASCADE,
+    INDEX idx_payments_order_id (order_id),
+    INDEX idx_payments_buyer_id (buyer_id),
+    INDEX idx_payments_transaction_uuid (transaction_uuid),
+    INDEX idx_payments_status (status)
+);
+
 CREATE TABLE IF NOT EXISTS messages (
     id INT PRIMARY KEY AUTO_INCREMENT,
     sender_id INT NOT NULL,

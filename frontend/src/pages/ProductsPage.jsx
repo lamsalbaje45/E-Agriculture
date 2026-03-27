@@ -13,12 +13,14 @@ const initialForm = {
   unit: "kg",
   region: "",
   imageUrl: "",
+  imageFile: null,
 };
 
 export default function ProductsPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const formRef = useRef(null);
+  const imageInputRef = useRef(null);
   const [products, setProducts] = useState([]);
   const [filters, setFilters] = useState({ region: "", type: "", search: "" });
   const [form, setForm] = useState(initialForm);
@@ -80,12 +82,34 @@ export default function ProductsPage() {
 
   const submitProduct = async (event) => {
     event.preventDefault();
-    if (form.id) {
-      await api.put(`/products/${form.id}`, form);
-    } else {
-      await api.post("/products", form);
+
+    const payload = new FormData();
+    payload.append("name", form.name);
+    payload.append("description", form.description);
+    payload.append("productType", form.productType);
+    payload.append("price", form.price);
+    payload.append("quantity", form.quantity);
+    payload.append("unit", form.unit);
+    payload.append("region", form.region);
+
+    if (form.imageUrl) {
+      payload.append("imageUrl", form.imageUrl);
     }
+
+    if (form.imageFile) {
+      payload.append("image", form.imageFile);
+    }
+
+    if (form.id) {
+      await api.put(`/products/${form.id}`, payload);
+    } else {
+      await api.post("/products", payload);
+    }
+
     setForm(initialForm);
+    if (imageInputRef.current) {
+      imageInputRef.current.value = "";
+    }
     loadProducts();
   };
 
@@ -100,7 +124,12 @@ export default function ProductsPage() {
       unit: product.unit,
       region: product.region,
       imageUrl: product.image_url || "",
+      imageFile: null,
     });
+
+    if (imageInputRef.current) {
+      imageInputRef.current.value = "";
+    }
 
     formRef.current?.scrollIntoView({
       behavior: "smooth",
@@ -172,7 +201,24 @@ export default function ProductsPage() {
           <input className="rounded-2xl border border-bark/10 bg-white px-4 py-3" placeholder="Quantity" value={form.quantity} onChange={(e) => setForm({ ...form, quantity: e.target.value })} />
           <input className="rounded-2xl border border-bark/10 bg-white px-4 py-3" placeholder="Unit" value={form.unit} onChange={(e) => setForm({ ...form, unit: e.target.value })} />
           <input className="rounded-2xl border border-bark/10 bg-white px-4 py-3" placeholder="Region" value={form.region} onChange={(e) => setForm({ ...form, region: e.target.value })} />
-          <input className="rounded-2xl border border-bark/10 bg-white px-4 py-3 md:col-span-2" placeholder="Image URL" value={form.imageUrl} onChange={(e) => setForm({ ...form, imageUrl: e.target.value })} />
+          <div className="rounded-2xl border border-bark/10 bg-white px-4 py-3 md:col-span-2">
+            <label className="mb-2 block text-sm font-semibold text-bark">Product photo</label>
+            <input
+              ref={imageInputRef}
+              type="file"
+              accept="image/*"
+              className="w-full text-sm text-bark"
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  imageFile: e.target.files?.[0] || null,
+                })
+              }
+            />
+            {form.id && !form.imageFile && form.imageUrl && (
+              <p className="mt-2 text-xs text-bark/70">Current photo will be kept if you do not pick a new file.</p>
+            )}
+          </div>
           <textarea className="rounded-2xl border border-bark/10 bg-white px-4 py-3 md:col-span-2" rows="4" placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
           <div className="flex flex-col gap-3 md:col-span-2 sm:flex-row">
             <button className="w-full rounded-2xl bg-moss px-4 py-3 font-semibold text-white sm:w-auto">
@@ -182,7 +228,12 @@ export default function ProductsPage() {
               <button
                 type="button"
                 className="w-full rounded-2xl bg-white px-4 py-3 font-semibold text-bark sm:w-auto"
-                onClick={() => setForm(initialForm)}
+                onClick={() => {
+                  setForm(initialForm);
+                  if (imageInputRef.current) {
+                    imageInputRef.current.value = "";
+                  }
+                }}
               >
                 Cancel edit
               </button>

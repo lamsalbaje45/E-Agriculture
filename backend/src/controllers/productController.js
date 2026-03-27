@@ -61,11 +61,12 @@ export async function getProductById(req, res, next) {
 export async function createProduct(req, res, next) {
   try {
     const { name, description, productType, price, quantity, unit, region, imageUrl } = req.body;
+    const nextImageUrl = req.file ? `/uploads/products/${req.file.filename}` : imageUrl || null;
 
     const result = await query(
       `INSERT INTO products (farmer_id, name, description, product_type, price, quantity, unit, region, image_url)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [req.user.id, name, description || null, productType, price, quantity, unit, region, imageUrl || null]
+      [req.user.id, name, description || null, productType, price, quantity, unit, region, nextImageUrl]
     );
 
     const rows = await query("SELECT * FROM products WHERE id = ?", [result.insertId]);
@@ -89,12 +90,17 @@ export async function updateProduct(req, res, next) {
     }
 
     const { name, description, productType, price, quantity, unit, region, imageUrl } = req.body;
+    const nextImageUrl = req.file
+      ? `/uploads/products/${req.file.filename}`
+      : imageUrl !== undefined
+        ? imageUrl || null
+        : product.image_url;
 
     await query(
       `UPDATE products
        SET name = ?, description = ?, product_type = ?, price = ?, quantity = ?, unit = ?, region = ?, image_url = ?
        WHERE id = ?`,
-      [name, description || null, productType, price, quantity, unit, region, imageUrl || null, req.params.id]
+      [name, description || null, productType, price, quantity, unit, region, nextImageUrl, req.params.id]
     );
 
     const rows = await query("SELECT * FROM products WHERE id = ?", [req.params.id]);
